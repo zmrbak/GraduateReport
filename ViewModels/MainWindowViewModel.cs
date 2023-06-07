@@ -18,6 +18,8 @@ namespace GraduateReport.ViewModels
     public partial class MainWindowViewModel : ObservableObject
     {
         static HttpClient httpClient;
+        static string docFile = "Report\\Template.docx";
+        string newDocFile = "";
         static MainWindowViewModel()
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
@@ -28,10 +30,15 @@ namespace GraduateReport.ViewModels
             {
                 BaseAddress = new Uri("https://192.168.250.250/"),
             };
+
+            if (Directory.Exists("Report") == false)
+            {
+                Directory.CreateDirectory("Report");
+            }
         }
 
-        static string docFile = "ReportTemplate.docx";
-        static string newDocFile = "NewReport.docx";
+
+
 
         [ObservableProperty]
         private Graduates? graduates;
@@ -62,6 +69,7 @@ namespace GraduateReport.ViewModels
                 Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(UnicodeRanges.All),
                 WriteIndented = true
             });
+            newDocFile = "Report\\" + cardNumber + ".docx";
         }
         [RelayCommand]
         private void CreateReport()
@@ -119,10 +127,31 @@ namespace GraduateReport.ViewModels
                         break;
                 }
             }
-            document.SaveToFile(newDocFile, FileFormat.Docx);
-            document.Close();
 
-            Process.Start("explorer.exe", newDocFile);
+            try
+            {
+                document.SaveToFile(newDocFile, FileFormat.Docx);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+            finally
+            {
+                document.Close();
+            }
+
+
+            try
+            {
+                Process.Start("explorer.exe", newDocFile);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                Process.Start("explorer.exe", "Report");
+            }
         }
     }
 }
