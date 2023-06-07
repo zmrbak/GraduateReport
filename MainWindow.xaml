@@ -43,7 +43,17 @@
                 Command="{Binding GetGraduatesCommand}"
                 CommandParameter="{Binding ElementName=cardNumber, Path=Text}"
                 Content="查询"
-                FontSize="20" />
+                FontSize="20">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=cardNumber, Path=Text}" Value="">
+                                <Setter Property="IsEnabled" Value="False" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             <Button
                 Width="100"
                 Margin="5"

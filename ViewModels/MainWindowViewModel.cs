@@ -37,10 +37,8 @@ namespace GraduateReport.ViewModels
             }
         }
 
-
-
-
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(CreateReportCommand))]
         private Graduates? graduates;
 
         [ObservableProperty]
@@ -71,7 +69,9 @@ namespace GraduateReport.ViewModels
             });
             newDocFile = "Report\\" + cardNumber + ".docx";
         }
-        [RelayCommand]
+
+
+        [RelayCommand(CanExecute = nameof(CanCreateReport))]
         private void CreateReport()
         {
             if (Graduates == null || Graduates.userInfo == null) return;
@@ -153,5 +153,7 @@ namespace GraduateReport.ViewModels
                 Process.Start("explorer.exe", "Report");
             }
         }
+
+        private bool CanCreateReport() => Graduates != null;
     }
 }
