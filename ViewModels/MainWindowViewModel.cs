@@ -8,6 +8,7 @@ using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Security.Authentication;
+using System.Security.Cryptography.Xml;
 using System.Text.Json;
 using System.Text.Unicode;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace GraduateReport.ViewModels
     {
         static HttpClient httpClient;
         static string docFile = "Report\\Template.docx";
+        static string baseAddress = "https://192.168.250.250/";
+        static string urlTxt = "url.txt";
         string newDocFile = "";
         static MainWindowViewModel()
         {
@@ -26,9 +29,18 @@ namespace GraduateReport.ViewModels
             clientHandler.ServerCertificateCustomValidationCallback += (sender, cert, chain, sslPolicyErrors) => { return true; };
             clientHandler.SslProtocols = SslProtocols.None;
 
+            if (File.Exists(urlTxt) == false)
+            {
+                File.WriteAllText(urlTxt, "https://192.168.250.250/");
+            }
+            else
+            {
+                baseAddress = File.ReadAllText(urlTxt);
+            }
+
             httpClient = new HttpClient(clientHandler)
             {
-                BaseAddress = new Uri("https://192.168.250.250/"),
+                BaseAddress = new Uri(baseAddress),
             };
 
             if (Directory.Exists("Report") == false)
@@ -88,17 +100,17 @@ namespace GraduateReport.ViewModels
             }
 
             Document document = new Document(docFile);
-            document.Replace("[一卡通号]", Graduates.userInfo.cardNumber, true,true);
-            document.Replace("[姓名]", Graduates.userInfo.userName, true,true);
-            document.Replace("[性别]", Graduates.userInfo.gender, true,true);
-            document.Replace("[学院]", Graduates.userInfo.departMent, true,true);
-            document.Replace("[到馆总次数]", Graduates.registrationCount.ToString(), true,true);
-            document.Replace("[首次到馆时间]", Graduates.registrationEarliest?.ToString("yyyy-MM-dd HH:mm:ss"), true,true);
-            document.Replace("[借书总数]", Graduates.borrowCount.ToString(), true,true);
-            document.Replace("[首次借书时间]", Graduates.borrowEarliest?.borrowTime?.ToString("yyyy-MM-dd HH:mm:ss"), true,true);
-            document.Replace("[首次借书书名]", Graduates.borrowEarliest?.bookName, true,true);
-            document.Replace("[首次借书条码]", Graduates.borrowEarliest?.bookBarCode, true,true);
-           
+            document.Replace("[一卡通号]", Graduates.userInfo.cardNumber, true, true);
+            document.Replace("[姓名]", Graduates.userInfo.userName, true, true);
+            document.Replace("[性别]", Graduates.userInfo.gender, true, true);
+            document.Replace("[学院]", Graduates.userInfo.departMent, true, true);
+            document.Replace("[到馆总次数]", Graduates.registrationCount.ToString(), true, true);
+            document.Replace("[首次到馆时间]", Graduates.registrationEarliest?.ToString("yyyy-MM-dd HH:mm:ss"), true, true);
+            document.Replace("[借书总数]", Graduates.borrowCount.ToString(), true, true);
+            document.Replace("[首次借书时间]", Graduates.borrowEarliest?.borrowTime?.ToString("yyyy-MM-dd HH:mm:ss"), true, true);
+            document.Replace("[首次借书书名]", Graduates.borrowEarliest?.bookName, true, true);
+            document.Replace("[首次借书条码]", Graduates.borrowEarliest?.bookBarCode, true, true);
+
             try
             {
                 document.SaveToFile(newDocFile, FileFormat.Docx);
