@@ -88,46 +88,17 @@ namespace GraduateReport.ViewModels
             }
 
             Document document = new Document(docFile);
-
-            foreach (TableRow tableRow in document.Sections[0].Tables[0].Rows)
-            {
-                switch (tableRow.Cells[0].Paragraphs[0].Text)
-                {
-                    case "一卡通号：":
-                        tableRow.Cells[1].Paragraphs[0].Text = Graduates.userInfo.cardNumber;
-                        break;
-                    case "姓名：":
-                        tableRow.Cells[1].Paragraphs[0].Text = Graduates.userInfo.userName;
-                        break;
-                    case "性别：":
-                        tableRow.Cells[1].Paragraphs[0].Text = Graduates.userInfo.gender;
-                        break;
-                    case "学院：":
-                        tableRow.Cells[1].Paragraphs[0].Text = Graduates.userInfo.departMent;
-                        break;
-                    case "到馆总次数：":
-                        tableRow.Cells[1].Paragraphs[0].Text = Graduates.registrationCount.ToString();
-                        break;
-                    case "首次到馆时间：":
-                        tableRow.Cells[1].Paragraphs[0].Text = Graduates.registrationEarliest?.ToString("yyyy-MM-dd HH:mm:ss");
-                        break;
-                    case "借书总数：":
-                        tableRow.Cells[1].Paragraphs[0].Text = Graduates.borrowCount.ToString();
-                        break;
-                    case "首次借书时间：":
-                        tableRow.Cells[1].Paragraphs[0].Text = Graduates.borrowEarliest?.borrowTime?.ToString("yyyy-MM-dd HH:mm:ss");
-                        break;
-                    case "首次借书书名：":
-                        tableRow.Cells[1].Paragraphs[0].Text = Graduates.borrowEarliest?.bookName;
-                        break;
-                    case "首次借书条码：":
-                        tableRow.Cells[1].Paragraphs[0].Text = Graduates.borrowEarliest?.bookBarCode;
-                        break;
-                    default:
-                        break;
-                }
-            }
-
+            document.Replace("[一卡通号]", Graduates.userInfo.cardNumber, true,true);
+            document.Replace("[姓名]", Graduates.userInfo.userName, true,true);
+            document.Replace("[性别]", Graduates.userInfo.gender, true,true);
+            document.Replace("[学院]", Graduates.userInfo.departMent, true,true);
+            document.Replace("[到馆总次数]", Graduates.registrationCount.ToString(), true,true);
+            document.Replace("[首次到馆时间]", Graduates.registrationEarliest?.ToString("yyyy-MM-dd HH:mm:ss"), true,true);
+            document.Replace("[借书总数]", Graduates.borrowCount.ToString(), true,true);
+            document.Replace("[首次借书时间]", Graduates.borrowEarliest?.borrowTime?.ToString("yyyy-MM-dd HH:mm:ss"), true,true);
+            document.Replace("[首次借书书名]", Graduates.borrowEarliest?.bookName, true,true);
+            document.Replace("[首次借书条码]", Graduates.borrowEarliest?.bookBarCode, true,true);
+           
             try
             {
                 document.SaveToFile(newDocFile, FileFormat.Docx);
