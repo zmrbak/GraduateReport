@@ -113,6 +113,14 @@ namespace GraduateReport.ViewModels
                 document.Replace("[首次借书书名]", Graduates.borrowEarliest.bookName, true, true);
                 document.Replace("[首次借书条码]", Graduates.borrowEarliest.bookBarCode, true, true);
             }
+            else
+            {
+                //如果未借过书，则将下列模板中的内容清空
+                document.Replace("[首次借书时间]", "", true, true);
+                document.Replace("《[首次借书书名]》", "", true, true);
+                document.Replace("[首次借书书名]", "", true, true);
+                document.Replace("[首次借书条码]", "", true, true);
+            }
 
             try
             {
