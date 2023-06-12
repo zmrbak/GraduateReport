@@ -107,9 +107,12 @@ namespace GraduateReport.ViewModels
             document.Replace("[到馆总次数]", Graduates.registrationCount.ToString(), true, true);
             document.Replace("[首次到馆时间]", Graduates.registrationEarliest?.ToString("yyyy-MM-dd HH:mm:ss"), true, true);
             document.Replace("[借书总数]", Graduates.borrowCount.ToString(), true, true);
-            document.Replace("[首次借书时间]", Graduates.borrowEarliest?.borrowTime?.ToString("yyyy-MM-dd HH:mm:ss"), true, true);
-            document.Replace("[首次借书书名]", Graduates.borrowEarliest?.bookName, true, true);
-            document.Replace("[首次借书条码]", Graduates.borrowEarliest?.bookBarCode, true, true);
+            if (Graduates.borrowEarliest != null)
+            {
+                document.Replace("[首次借书时间]", Graduates.borrowEarliest.borrowTime?.ToString("yyyy-MM-dd HH:mm:ss"), true, true);
+                document.Replace("[首次借书书名]", Graduates.borrowEarliest.bookName, true, true);
+                document.Replace("[首次借书条码]", Graduates.borrowEarliest.bookBarCode, true, true);
+            }
 
             try
             {
